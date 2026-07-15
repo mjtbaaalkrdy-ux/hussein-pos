@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Tajawal", sans-serif; direction: rtl; }
+
+  .no-print { @media print { display: none !important; } }
+  .print-only { display: none; @media print { display: block !important; } }
+}
+
+@layer components {
+  .btn-primary { @apply bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-600 transition disabled:opacity-50; }
+  .btn-danger { @apply bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition; }
+  .btn-success { @apply bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition; }
+  .btn-warning { @apply bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition; }
+  .input-field { @apply w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent; }
+  .card { @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6; }
+}

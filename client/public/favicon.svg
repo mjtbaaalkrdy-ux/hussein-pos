@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a5f"/>
+      <stop offset="100%" style="stop-color:#0f1c31"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="80" fill="url(#bg)"/>
+  
+  <g transform="translate(256,240)">
+    <!-- H شكل هندسي يمثل حرف H -->
+    <rect x="-80" y="-90" width="30" height="180" rx="6" fill="#60a5fa"/>
+    <rect x="50" y="-90" width="30" height="180" rx="6" fill="#60a5fa"/>
+    <rect x="-80" y="-10" width="160" height="30" rx="6" fill="#60a5fa"/>
+    
+    <!-- دائرة المعالج (CPU) -->
+    <rect x="-50" y="30" width="100" height="80" rx="12" fill="#60a5fa" opacity="0.9"/>
+    <rect x="-40" y="40" width="80" height="60" rx="8" fill="#1e3a5f"/>
+    
+    <!-- نقاط الاتصال -->
+    <circle cx="-35" cy="50" r="4" fill="#93c5fd"/>
+    <circle cx="0" cy="50" r="4" fill="#93c5fd"/>
+    <circle cx="35" cy="50" r="4" fill="#93c5fd"/>
+    <circle cx="-35" cy="70" r="4" fill="#93c5fd"/>
+    <circle cx="0" cy="70" r="4" fill="#93c5fd"/>
+    <circle cx="35" cy="70" r="4" fill="#93c5fd"/>
+    
+    <!-- خطوط البيانات -->
+    <line x1="-40" y1="110" x2="-20" y2="130" stroke="#60a5fa" stroke-width="3" opacity="0.7"/>
+    <line x1="0" y1="110" x2="0" y2="135" stroke="#60a5fa" stroke-width="3" opacity="0.7"/>
+    <line x1="40" y1="110" x2="20" y2="130" stroke="#60a5fa" stroke-width="3" opacity="0.7"/>
+  </g>
+  
+  <!-- اسم حسين بالعربي -->
+  <g transform="translate(256,440)">
+    <text text-anchor="middle" font-family="Tajawal, sans-serif" font-weight="800" font-size="52" fill="#60a5fa">حسين</text>
+  </g>
+</svg>

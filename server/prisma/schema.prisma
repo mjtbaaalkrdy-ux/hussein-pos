@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  phone     String   @default("")
+  password  String
+  role      String   @default("picker")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdOrders Order[]     @relation("OrderCreator")
+  pickedOrders  Order[]     @relation("OrderPicker")
+  assignedTasks Task[]      @relation("TaskSupervisor")
+  pickerTasks   Task[]      @relation("TaskPicker")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  barcode     String   @default("")
+  costPrice   Float    @default(0)
+  sellPrice   Float    @default(0)
+  piecesStock Int      @default(0)
+  cartonsStock Int     @default(0)
+  warehouse   String   @default("رئيسي")
+  section     String   @default("")
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  items       OrderItem[]
+}
+
+model Order {
+  id            Int      @id @default(autoincrement())
+  customerName  String   @default("")
+  customerPhone String   @default("")
+  status        String   @default("pending")
+  totalPieces   Int      @default(0)
+  totalCartons  Int      @default(0)
+  totalAmount   Float    @default(0)
+  notes         String   @default("")
+  creatorId     Int
+  pickerId      Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  creator  User        @relation("OrderCreator", fields: [creatorId], references: [id])
+  picker   User?       @relation("OrderPicker", fields: [pickerId], references: [id])
+  items    OrderItem[]
+  tasks    Task[]
+}
+
+model OrderItem {
+  id         Int     @id @default(autoincrement())
+  orderId    Int
+  productId  Int
+  productName String
+  pieces     Int     @default(0)
+  cartons    Int     @default(0)
+  unitPrice  Float   @default(0)
+  total      Float   @default(0)
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model Debt {
+  id        Int      @id @default(autoincrement())
+  type      String   @default("customer")
+  name      String
+  phone     String   @default("")
+  amount    Float    @default(0)
+  paid      Float    @default(0)
+  notes     String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id           Int      @id @default(autoincrement())
+  orderId      Int
+  supervisorId Int
+  pickerId     Int
+  status       String   @default("assigned")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  order      Order @relation(fields: [orderId], references: [id])
+  supervisor User  @relation("TaskSupervisor", fields: [supervisorId], references: [id])
+  picker     User  @relation("TaskPicker", fields: [pickerId], references: [id])
+}
