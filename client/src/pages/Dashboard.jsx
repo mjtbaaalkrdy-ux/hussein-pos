@@ -123,7 +123,7 @@ export default function Dashboard() {
         {(auth.isAdmin || auth.isAccountant) && (
           <button onClick={openDebts} className="card text-center hover:shadow-md transition cursor-pointer text-right">
             <p className="text-gray-500 text-sm">إجمالي الديون</p>
-            <p className="text-3xl font-bold text-red-600" dir="ltr">{Number(stats.debtTotal || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ر.س</p>
+            <p className="text-3xl font-bold text-red-600" dir="ltr">{Number(stats.debtTotal || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} د.ع</p>
           </button>
         )}
       </div>
@@ -195,9 +195,9 @@ export default function Dashboard() {
                         </td>
                         <td className="py-2 px-2 font-medium">{d.name}</td>
                         <td className="py-2 px-2">{d.phone || "---"}</td>
-                        <td className="py-2 px-2" dir="ltr">{Number(d.amount || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ر.س</td>
-                        <td className="py-2 px-2 text-green-600" dir="ltr">{Number(d.paid || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ر.س</td>
-                        <td className="py-2 px-2 font-bold text-red-600" dir="ltr">{Number(d.amount - d.paid || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ر.س</td>
+                        <td className="py-2 px-2" dir="ltr">{Number(d.amount || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} د.ع</td>
+                        <td className="py-2 px-2 text-green-600" dir="ltr">{Number(d.paid || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} د.ع</td>
+                        <td className="py-2 px-2 font-bold text-red-600" dir="ltr">{Number(d.amount - d.paid || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} د.ع</td>
                         {auth.isAdmin && (
                           <td className="py-2 px-2">
                             <button onClick={() => deleteDebt(d.id)} className="text-red-600 hover:text-red-800 text-lg">&times;</button>
@@ -220,7 +220,7 @@ export default function Dashboard() {
               {selectedOrder ? (
                 <button onClick={() => setSelectedOrder(null)} className="text-primary-500 hover:text-primary-700 font-medium text-sm">&rarr; رجوع للقائمة</button>
               ) : (
-                <h2 className="text-lg font-bold text-gray-800">{modal.label} - <span className="text-primary-500">{modal.amount.toFixed(2)} ر.س</span> ({modal.count} طلب)</h2>
+                <h2 className="text-lg font-bold text-gray-800">{modal.label} - <span className="text-primary-500">{modal.amount.toFixed(2)} د.ع</span> ({modal.count} طلب)</h2>
               )}
               <button onClick={() => { setModal(null); setSelectedOrder(null); }} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
             </div>

@@ -54,7 +54,7 @@ const Invoice = forwardRef(({ order }, ref) => {
                 مجموع القطع: {order.totalPieces} | مجموع الكرتون: {order.totalCartons}
               </td>
               <td style={{ textAlign: "left", fontSize: "11pt", color: "#1e3a5f" }}>
-                الإجمالي: {order.totalAmount?.toFixed(2)} ر.س
+                الإجمالي: {order.totalAmount?.toFixed(2)} د.ع
               </td>
             </tr>
           </tbody>

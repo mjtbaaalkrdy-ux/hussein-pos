@@ -67,11 +67,11 @@ export default function Debts() {
             <input placeholder="أدخل رقم الهاتف" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="input-field" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">المبلغ (ر.س)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">المبلغ (د.ع)</label>
             <input type="number" step="0.01" placeholder="0.00" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} className="input-field" required />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">المدفوع (ر.س)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">المدفوع (د.ع)</label>
             <input type="number" step="0.01" placeholder="0.00" value={form.paid} onChange={(e) => setForm({ ...form, paid: e.target.value })} className="input-field" />
           </div>
           <div>
@@ -109,9 +109,9 @@ export default function Debts() {
                 </td>
                 <td className="py-2 px-2 font-medium">{d.name}</td>
                 <td className="py-2 px-2">{d.phone || "---"}</td>
-                <td className="py-2 px-2" dir="ltr">{Number(d.amount || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ر.س</td>
-                <td className="py-2 px-2 text-green-600" dir="ltr">{Number(d.paid || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ر.س</td>
-                <td className="py-2 px-2 font-bold text-red-600" dir="ltr">{Number(d.amount - d.paid || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ر.س</td>
+                <td className="py-2 px-2" dir="ltr">{Number(d.amount || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} د.ع</td>
+                <td className="py-2 px-2 text-green-600" dir="ltr">{Number(d.paid || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} د.ع</td>
+                <td className="py-2 px-2 font-bold text-red-600" dir="ltr">{Number(d.amount - d.paid || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} د.ع</td>
                 <td className="py-2 px-2 text-gray-500">{d.notes || "---"}</td>
                 {auth.isAdmin && (
                   <td className="py-2 px-2">

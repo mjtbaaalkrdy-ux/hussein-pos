@@ -4,8 +4,8 @@ import useAuth from "../store/auth";
 import Logo from "../components/Logo";
 
 export default function Login() {
-  const [email, setEmail] = useState("admin@hussein.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { login, loading, error } = useAuth();
   const navigate = useNavigate();
 
@@ -41,14 +41,7 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="mt-6 p-3 bg-gray-50 rounded-lg text-xs text-gray-500">
-          <p className="font-bold mb-1 text-center">حسابات تجريبية:</p>
-          <div className="grid grid-cols-1 gap-1">
-            <p>admin@hussein.com | picker@hussein.com | accountant@hussein.com</p>
-            <p>supervisor@hussein.com | assistant@hussein.com</p>
-            <p className="text-center font-bold text-primary-500">كلمة المرور: 123456</p>
-          </div>
-        </div>
+
       </div>
     </div>
   );

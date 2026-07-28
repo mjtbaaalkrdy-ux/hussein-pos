@@ -113,7 +113,7 @@ export default function Orders() {
                     <div className="flex-1 grid grid-cols-2 md:grid-cols-5 gap-2 text-sm">
                       <span className="font-bold text-primary-500">#{o.id}</span>
                       <span className="truncate">{o.customerName || "---"}</span>
-                      <span className="font-bold" dir="ltr">{Number(o.totalAmount || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ر.س</span>
+                      <span className="font-bold" dir="ltr">{Number(o.totalAmount || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} د.ع</span>
                       <span><span className={`px-2 py-0.5 rounded-full text-xs ${statusColors[o.status]}`}>{statusLabels[o.status]}</span></span>
                       <span className="text-gray-400 text-xs">{o.creator?.name || ""}</span>
                     </div>
@@ -196,7 +196,7 @@ export default function Orders() {
                     <td className="py-2 px-2 text-center">{selectedOrder.totalPieces}</td>
                     <td className="py-2 px-2 text-center">{selectedOrder.totalCartons}</td>
                     <td></td>
-                    <td className="py-2 px-2 text-center text-primary-500" dir="ltr">{Number(selectedOrder.totalAmount || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ر.س</td>
+                    <td className="py-2 px-2 text-center text-primary-500" dir="ltr">{Number(selectedOrder.totalAmount || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} د.ع</td>
                   </tr>
                 </tfoot>
               </table>

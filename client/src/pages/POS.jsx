@@ -96,7 +96,7 @@ export default function POS() {
             {filteredProducts.map((p) => (
               <button key={p.id} onClick={() => addToCart(p)} className="bg-primary-50 hover:bg-primary-100 border border-primary-200 rounded-lg p-2 text-right transition text-sm">
                 <p className="font-bold text-primary-700 truncate">{p.name}</p>
-                <p className="text-primary-500">{p.sellPrice?.toFixed(2)} ر.س</p>
+                <p className="text-primary-500">{p.sellPrice?.toFixed(2)} د.ع</p>
               </button>
             ))}
           </div>
@@ -128,7 +128,7 @@ export default function POS() {
           <div className="border-t border-gray-200 pt-3 space-y-1 text-sm">
             <div className="flex justify-between"><span>إجمالي القطع:</span><span>{totalPieces}</span></div>
             <div className="flex justify-between"><span>إجمالي الكراتين:</span><span>{totalCartons}</span></div>
-            <div className="flex justify-between text-lg font-bold text-primary-500"><span>المجموع الكلي:</span><span>{totalAmount.toFixed(2)} ر.س</span></div>
+            <div className="flex justify-between text-lg font-bold text-primary-500"><span>المجموع الكلي:</span><span>{totalAmount.toFixed(2)} د.ع</span></div>
           </div>
 
           <div className="flex gap-3">
