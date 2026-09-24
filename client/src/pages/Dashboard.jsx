@@ -238,6 +238,7 @@ export default function Dashboard() {
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div><span className="font-medium">الزبون:</span> {selectedOrder.customerName || "---"}</div>
                     <div><span className="font-medium">الهاتف:</span> {selectedOrder.customerPhone || "---"}</div>
+                    <div><span className="font-medium">الموقع:</span> {selectedOrder.customerLocation || "---"}</div>
                     <div><span className="font-medium">التاريخ:</span> {new Date(selectedOrder.createdAt).toLocaleDateString("ar-SA")}</div>
                     <div><span className="font-medium">رقم التسلسل:</span> #{selectedOrder.id}</div>
                     <div><span className="font-medium">الحالة:</span> <span className={`px-2 py-0.5 rounded-full text-xs ${statusColors[selectedOrder.status]}`}>{statusLabels[selectedOrder.status]}</span></div>
@@ -248,6 +249,7 @@ export default function Dashboard() {
                       <tr className="border-b border-gray-200 text-right bg-gray-50">
                         <th className="py-2 px-2">ت</th>
                         <th className="py-2 px-2">المنتج</th>
+                        <th className="py-2 px-2 text-center">الإيتم</th>
                         <th className="py-2 px-2 text-center">قطع</th>
                         <th className="py-2 px-2 text-center">كرتون</th>
                         <th className="py-2 px-2 text-center">سعر القطعة</th>
@@ -259,6 +261,7 @@ export default function Dashboard() {
                         <tr key={item.id} className="border-b border-gray-100">
                           <td className="py-2 px-2">{i + 1}</td>
                           <td className="py-2 px-2 font-medium">{item.productName}</td>
+                          <td className="py-2 px-2 text-center" dir="ltr">{item.barcode || "-"}</td>
                           <td className="py-2 px-2 text-center">{item.pieces}</td>
                           <td className="py-2 px-2 text-center">{item.cartons}</td>
                           <td className="py-2 px-2 text-center">{item.unitPrice?.toFixed(2)}</td>

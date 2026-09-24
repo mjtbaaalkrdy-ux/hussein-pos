@@ -10,6 +10,8 @@ export default function POS() {
   const [cart, setCart] = useState([]);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [customerLocation, setCustomerLocation] = useState("");
+  const [debts, setDebts] = useState([]);
   const [search, setSearch] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [lastOrder, setLastOrder] = useState(null);
@@ -24,7 +26,19 @@ export default function POS() {
     } catch {}
   }, []);
 
-  useEffect(() => { fetchProducts(); }, [fetchProducts]);
+  const fetchDebts = useCallback(async () => {
+    try {
+      const { data } = await api.get("/debts");
+      setDebts(Array.isArray(data) ? data : []);
+    } catch {}
+  }, []);
+
+  useEffect(() => { fetchProducts(); fetchDebts(); }, [fetchProducts, fetchDebts]);
+
+  // الديون السابقة للزبون الحالي (بنفس رقم الهاتف)
+  const previousDebt = customerPhone
+    ? debts.filter((d) => d.phone && d.phone.replace(/\s/g, "") === customerPhone.replace(/\s/g, "")).reduce((s, d) => s + (d.amount - d.paid), 0)
+    : 0;
 
   const filteredProducts = products.filter((p) =>
     p.name.includes(search) || p.barcode.includes(search)
@@ -39,6 +53,7 @@ export default function POS() {
       setCart([...cart, {
         productId: product.id,
         productName: product.name,
+        barcode: product.barcode || "",
         unitPrice: product.sellPrice,
         pieces: 1,
         cartons: 0,
@@ -67,13 +82,14 @@ export default function POS() {
     setSubmitting(true);
     try {
       const { data } = await api.post("/orders", {
-        customerName, customerPhone,
+        customerName, customerPhone, customerLocation,
         items: cart.map((c) => ({ productId: c.productId, pieces: c.pieces, cartons: c.cartons })),
       });
       setLastOrder(data);
       setCart([]);
       setCustomerName("");
       setCustomerPhone("");
+      setCustomerLocation("");
     } catch (err) {
       alert(err.response?.data?.message || "خطأ في إرسال الطلب");
     }
@@ -109,6 +125,13 @@ export default function POS() {
             <input type="text" placeholder="اسم الزبون" value={customerName} onChange={(e) => setCustomerName(e.target.value)} className="input-field" />
             <input type="text" placeholder="رقم الهاتف" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} className="input-field" />
           </div>
+          <input type="text" placeholder="موقع الزبون (المحافظة / المنطقة)" value={customerLocation} onChange={(e) => setCustomerLocation(e.target.value)} className="input-field" />
+          {previousDebt > 0 && (
+            <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-2 flex items-center justify-between">
+              <span>دين سابق لهذا الزبون:</span>
+              <span className="font-bold" dir="ltr">{Number(previousDebt).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} د.ع</span>
+            </div>
+          )}
 
           <div className="max-h-64 overflow-y-auto space-y-2">
             {cart.map((item, i) => (
@@ -116,7 +139,10 @@ export default function POS() {
                 <button onClick={() => removeFromCart(i)} className="text-red-500 hover:text-red-700 flex-shrink-0">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
-                <span className="flex-1 font-medium truncate">{item.productName}</span>
+                <div className="flex-1 min-w-0">
+                  <span className="font-medium block truncate">{item.productName}</span>
+                  <span className="text-xs text-gray-500" dir="ltr">الإيتم: {item.barcode || "---"}</span>
+                </div>
                 <input type="number" min="0" value={item.pieces} onChange={(e) => updateCartItem(i, "pieces", e.target.value)} className="w-14 border border-gray-300 rounded px-1 py-0.5 text-center" title="قطع" />
                 <input type="number" min="0" value={item.cartons} onChange={(e) => updateCartItem(i, "cartons", e.target.value)} className="w-14 border border-gray-300 rounded px-1 py-0.5 text-center" title="كراتين" />
                 <span className="w-16 text-left font-bold">{item.total?.toFixed(2)}</span>
@@ -128,6 +154,9 @@ export default function POS() {
           <div className="border-t border-gray-200 pt-3 space-y-1 text-sm">
             <div className="flex justify-between"><span>إجمالي القطع:</span><span>{totalPieces}</span></div>
             <div className="flex justify-between"><span>إجمالي الكراتين:</span><span>{totalCartons}</span></div>
+            {previousDebt > 0 && (
+              <div className="flex justify-between text-red-600"><span>الدين السابق:</span><span dir="ltr">{Number(previousDebt).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} د.ع</span></div>
+            )}
             <div className="flex justify-between text-lg font-bold text-primary-500"><span>المجموع الكلي:</span><span>{totalAmount.toFixed(2)} د.ع</span></div>
           </div>
 
@@ -146,7 +175,7 @@ export default function POS() {
             <button onClick={() => { handlePrint(); }} className="btn-primary">طباعة الوصل</button>
             <button onClick={() => setLastOrder(null)} className="btn-success">وصل جديد</button>
           </div>
-          <div className="hidden"><Invoice ref={invoiceRef} order={lastOrder} /></div>
+          <div className="hidden"><Invoice ref={invoiceRef} order={lastOrder} previousDebt={previousDebt} /></div>
         </div>
       )}
     </div>

@@ -71,7 +71,7 @@ router.get("/:id", authenticate, async (req, res) => {
 });
 
 router.post("/", authenticate, authorize("admin", "assistant", "accountant"), async (req, res) => {
-  const { customerName, customerPhone, items } = req.body;
+  const { customerName, customerPhone, customerLocation, items } = req.body;
   if (!items || items.length === 0) return res.status(400).json({ message: "يجب إضافة منتج واحد على الأقل" });
   if (items.length > 20) return res.status(400).json({ message: "الحد الأقصى 20 صنفاً في الوصل" });
 
@@ -90,6 +90,7 @@ router.post("/", authenticate, authorize("admin", "assistant", "accountant"), as
     orderItems.push({
       productId: product.id,
       productName: product.name,
+      barcode: product.barcode || "",
       pieces,
       cartons,
       unitPrice: product.sellPrice,
@@ -101,6 +102,7 @@ router.post("/", authenticate, authorize("admin", "assistant", "accountant"), as
     data: {
       customerName: customerName || "",
       customerPhone: customerPhone || "",
+      customerLocation: customerLocation || "",
       status: "pending",
       totalPieces, totalCartons, totalAmount,
       creatorId: req.user.id,

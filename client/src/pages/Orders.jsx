@@ -168,6 +168,7 @@ export default function Orders() {
               <div className="grid grid-cols-2 gap-3 text-sm mb-4">
                 <div><span className="font-medium">الزبون:</span> {selectedOrder.customerName || "---"}</div>
                 <div><span className="font-medium">الهاتف:</span> {selectedOrder.customerPhone || "---"}</div>
+                <div><span className="font-medium">الموقع:</span> {selectedOrder.customerLocation || "---"}</div>
                 <div><span className="font-medium">التاريخ:</span> {new Date(selectedOrder.createdAt).toLocaleDateString("ar-SA")}</div>
                 <div><span className="font-medium">الحالة:</span> <span className={`px-2 py-0.5 rounded-full text-xs ${statusColors[selectedOrder.status]}`}>{statusLabels[selectedOrder.status]}</span></div>
                 <div><span className="font-medium">رقم التسلسل:</span> #{selectedOrder.id}</div>
@@ -180,6 +181,7 @@ export default function Orders() {
                   <tr className="bg-primary-500 text-white">
                     <th className="py-2 px-2 text-center">ت</th>
                     <th className="py-2 px-2 text-right">المنتج</th>
+                    <th className="py-2 px-2 text-center">الإيتم</th>
                     <th className="py-2 px-2 text-center">قطع</th>
                     <th className="py-2 px-2 text-center">كرتون</th>
                     <th className="py-2 px-2 text-center">سعر القطعة</th>
@@ -191,6 +193,7 @@ export default function Orders() {
                     <tr key={item.id} className="border-b border-gray-100">
                       <td className="py-2 px-2 text-center">{i + 1}</td>
                       <td className="py-2 px-2">{item.productName}</td>
+                      <td className="py-2 px-2 text-center" dir="ltr">{item.barcode || "-"}</td>
                       <td className="py-2 px-2 text-center">{item.pieces}</td>
                       <td className="py-2 px-2 text-center">{item.cartons}</td>
                       <td className="py-2 px-2 text-center" dir="ltr">{Number(item.unitPrice || 0).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>

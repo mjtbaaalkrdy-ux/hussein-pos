@@ -45,6 +45,7 @@ model Order {
   id            Int      @id @default(autoincrement())
   customerName  String   @default("")
   customerPhone String   @default("")
+  customerLocation String @default("")
   status        String   @default("pending")
   totalPieces   Int      @default(0)
   totalCartons  Int      @default(0)
@@ -66,6 +67,7 @@ model OrderItem {
   orderId    Int
   productId  Int
   productName String
+  barcode    String  @default("")
   pieces     Int     @default(0)
   cartons    Int     @default(0)
   unitPrice  Float   @default(0)
