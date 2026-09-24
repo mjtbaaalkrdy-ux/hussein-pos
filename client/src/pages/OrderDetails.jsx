@@ -7,11 +7,18 @@ import { useReactToPrint } from "react-to-print";
 export default function OrderDetails() {
   const { id } = useParams();
   const [order, setOrder] = useState(null);
+  const [debts, setDebts] = useState([]);
   const invoiceRef = useRef();
 
   useEffect(() => {
     api.get(`/orders/${id}`).then(({ data }) => setOrder(data)).catch(() => {});
+    api.get("/debts").then(({ data }) => setDebts(Array.isArray(data) ? data : [])).catch(() => {});
   }, [id]);
+
+  // الدين السابق للزبون بنفس رقم الهاتف
+  const previousDebt = order?.customerPhone
+    ? debts.filter((d) => d.phone && d.phone.replace(/\s/g, "") === order.customerPhone.replace(/\s/g, "")).reduce((s, d) => s + (d.amount - d.paid), 0)
+    : 0;
 
   const handlePrint = useReactToPrint({ contentRef: invoiceRef, documentTitle: `وصل_${id}` });
 
@@ -32,7 +39,11 @@ export default function OrderDetails() {
           <h2 className="text-lg font-bold text-gray-700">معلومات الزبون</h2>
           <p><span className="font-medium">الاسم:</span> {order.customerName || "---"}</p>
           <p><span className="font-medium">الهاتف:</span> {order.customerPhone || "---"}</p>
+          <p><span className="font-medium">الموقع:</span> {order.customerLocation || "---"}</p>
           <p><span className="font-medium">التاريخ:</span> {new Date(order.createdAt).toLocaleString("ar-SA")}</p>
+          {previousDebt > 0 && (
+            <p className="text-red-600 font-bold">الدين السابق: {Number(previousDebt).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} د.ع</p>
+          )}
         </div>
         <div className="card space-y-2">
           <h2 className="text-lg font-bold text-gray-700">معلومات الطلب</h2>
@@ -49,6 +60,7 @@ export default function OrderDetails() {
             <tr className="border-b border-gray-200 text-right">
               <th className="py-2 px-2">ت</th>
               <th className="py-2 px-2">المنتج</th>
+              <th className="py-2 px-2 text-center">الإيتم</th>
               <th className="py-2 px-2">القطع</th>
               <th className="py-2 px-2">الكراتين</th>
               <th className="py-2 px-2">سعر القطعة</th>
@@ -60,6 +72,7 @@ export default function OrderDetails() {
               <tr key={item.id} className="border-b border-gray-100">
                 <td className="py-2 px-2">{i + 1}</td>
                 <td className="py-2 px-2 font-medium">{item.productName}</td>
+                <td className="py-2 px-2 text-center" dir="ltr">{item.barcode || "-"}</td>
                 <td className="py-2 px-2">{item.pieces}</td>
                 <td className="py-2 px-2">{item.cartons}</td>
                 <td className="py-2 px-2">{item.unitPrice?.toFixed(2)}</td>
@@ -73,13 +86,14 @@ export default function OrderDetails() {
               <td className="py-2 px-2">{order.totalPieces}</td>
               <td className="py-2 px-2">{order.totalCartons}</td>
               <td></td>
+              <td></td>
               <td className="py-2 px-2 text-left text-primary-500">{order.totalAmount?.toFixed(2)}</td>
             </tr>
           </tfoot>
         </table>
       </div>
 
-      <div className="hidden"><Invoice ref={invoiceRef} order={order} /></div>
+      <div className="hidden"><Invoice ref={invoiceRef} order={order} previousDebt={previousDebt} /></div>
     </div>
   );
 }

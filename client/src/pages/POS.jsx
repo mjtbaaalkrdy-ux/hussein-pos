@@ -15,6 +15,7 @@ export default function POS() {
   const [search, setSearch] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [lastOrder, setLastOrder] = useState(null);
+  const [lastDebt, setLastDebt] = useState(0);
   const invoiceRef = useRef();
   const navigate = useNavigate();
   const auth = useAuth();
@@ -86,6 +87,7 @@ export default function POS() {
         items: cart.map((c) => ({ productId: c.productId, pieces: c.pieces, cartons: c.cartons })),
       });
       setLastOrder(data);
+      setLastDebt(previousDebt);
       setCart([]);
       setCustomerName("");
       setCustomerPhone("");
@@ -175,7 +177,7 @@ export default function POS() {
             <button onClick={() => { handlePrint(); }} className="btn-primary">طباعة الوصل</button>
             <button onClick={() => setLastOrder(null)} className="btn-success">وصل جديد</button>
           </div>
-          <div className="hidden"><Invoice ref={invoiceRef} order={lastOrder} previousDebt={previousDebt} /></div>
+          <div className="hidden"><Invoice ref={invoiceRef} order={lastOrder} previousDebt={lastDebt} /></div>
         </div>
       )}
     </div>
