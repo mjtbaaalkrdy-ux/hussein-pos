@@ -1,7 +1,5 @@
 import express from "express";
 import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
 import http from "http";
 import { Server } from "socket.io";
 import { PORT } from "./config.js";
@@ -11,9 +9,7 @@ import userRoutes from "./routes/users.routes.js";
 import productRoutes from "./routes/products.routes.js";
 import orderRoutes from "./routes/orders.routes.js";
 import debtRoutes from "./routes/debts.routes.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import purchaseRoutes from "./routes/purchases.routes.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -27,14 +23,9 @@ app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/debts", debtRoutes);
+app.use("/api/purchases", purchaseRoutes);
 
 app.get("/api/health", (_, res) => res.json({ status: "ok" }));
-
-const clientDist = path.join(__dirname, "../../client/dist");
-app.use(express.static(clientDist));
-app.get("*", (_, res) => {
-  res.sendFile(path.join(clientDist, "index.html"));
-});
 
 app.set("io", io);
 setupSocket(io);

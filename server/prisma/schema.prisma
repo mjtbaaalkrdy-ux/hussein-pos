@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -32,6 +32,7 @@ model Product {
   sellPrice   Float    @default(0)
   piecesStock Int      @default(0)
   cartonsStock Int     @default(0)
+  minStock    Int      @default(0)
   warehouse   String   @default("رئيسي")
   section     String   @default("")
   active      Boolean  @default(true)
@@ -98,4 +99,26 @@ model Task {
   order      Order @relation(fields: [orderId], references: [id])
   supervisor User  @relation("TaskSupervisor", fields: [supervisorId], references: [id])
   picker     User  @relation("TaskPicker", fields: [pickerId], references: [id])
+}
+
+model Purchase {
+  id          Int            @id @default(autoincrement())
+  supplier    String         @default("")
+  notes       String         @default("")
+  status      String         @default("draft")
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  items       PurchaseItem[]
+}
+
+model PurchaseItem {
+  id          Int     @id @default(autoincrement())
+  purchaseId  Int
+  productId   Int?
+  productName String
+  quantity    Int     @default(0)
+  unitCost    Float   @default(0)
+  total       Float   @default(0)
+
+  purchase Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
 }

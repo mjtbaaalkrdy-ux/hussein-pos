@@ -52,13 +52,28 @@ export default function Users() {
 
       {showForm && (
         <form onSubmit={handleSubmit} className="card grid grid-cols-1 md:grid-cols-3 gap-4">
-          <input placeholder="الاسم" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="input-field" required />
-          <input type="email" placeholder="البريد الإلكتروني" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="input-field" required />
-          <input placeholder="رقم الهاتف" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="input-field" />
-          <input type="password" placeholder={edit ? "اتركه فارغاً إذا لم ترد التغيير" : "كلمة المرور"} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="input-field" required={!edit} />
-          <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className="input-field">
-            {Object.entries(roleNames).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-          </select>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">الاسم</label>
+            <input placeholder="اكتب اسم المستخدم" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="input-field" required />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">البريد الإلكتروني</label>
+            <input type="email" placeholder="مثال: name@mail.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="input-field" required />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">رقم الهاتف</label>
+            <input placeholder="مثال: 07701234567" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="input-field" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">كلمة المرور</label>
+            <input type="password" placeholder={edit ? "اتركه فارغاً إذا لم ترد التغيير" : "اكتب كلمة المرور"} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="input-field" required={!edit} />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">الدور</label>
+            <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className="input-field">
+              {Object.entries(roleNames).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+            </select>
+          </div>
           <div className="flex gap-2 items-end">
             <button type="submit" className="btn-primary">{edit ? "تحديث" : "إضافة"}</button>
             <button type="button" onClick={resetForm} className="btn-danger">إلغاء</button>

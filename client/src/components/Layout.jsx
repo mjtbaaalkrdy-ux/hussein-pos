@@ -4,13 +4,44 @@ import useAuthStore from "../store/auth";
 import Logo from "./Logo";
 import useAuth from "../hooks/useAuth";
 
-const navItems = [
-  { path: "/dashboard", label: "لوحة التحكم", roles: ["admin", "assistant", "accountant", "supervisor"] },
-  { path: "/pos", label: "نقطة البيع", roles: ["admin", "assistant", "accountant"] },
-  { path: "/orders", label: "الطلبات", roles: ["admin", "assistant", "accountant", "supervisor", "picker"] },
-  { path: "/products", label: "المنتجات", roles: ["admin", "assistant"] },
-  { path: "/users", label: "المستخدمين", roles: ["admin", "assistant"] },
-  { path: "/debts", label: "الديون", roles: ["admin", "assistant", "accountant"] },
+// أقسام القائمة بحسب نظام عمل المحل
+const navSections = [
+  {
+    title: "الرئيسية",
+    items: [
+      { path: "/dashboard", label: "لوحة التحكم", roles: ["admin", "assistant", "accountant", "supervisor", "picker"] },
+    ],
+  },
+  {
+    title: "المبيعات",
+    items: [
+      { path: "/pos", label: "نقطة البيع", roles: ["admin", "assistant", "accountant"] },
+      { path: "/orders", label: "فواتير البيع", roles: ["admin", "assistant", "accountant", "supervisor", "picker"] },
+    ],
+  },
+  {
+    title: "الطلبات",
+    items: [
+      { path: "/orders?status=pending", label: "طلب غير مجهز", roles: ["admin", "assistant", "supervisor"] },
+      { path: "/orders?status=assigned", label: "قيد التجهيز", roles: ["admin", "assistant", "supervisor", "picker"] },
+      { path: "/orders?status=picked", label: "جاهز للشحن", roles: ["admin", "assistant", "supervisor", "picker"] },
+    ],
+  },
+  {
+    title: "المستودع",
+    items: [
+      { path: "/inventory", label: "جرد المستودع", roles: ["admin", "assistant"] },
+      { path: "/materials", label: "المواد المطلوبة", roles: ["admin", "assistant"] },
+      { path: "/purchases", label: "قوائم الشراء", roles: ["admin", "assistant"] },
+    ],
+  },
+  {
+    title: "الإدارة",
+    items: [
+      { path: "/users", label: "المستخدمين", roles: ["admin", "assistant"] },
+      { path: "/debts", label: "الديون", roles: ["admin", "assistant", "accountant"] },
+    ],
+  },
 ];
 
 const roleNames = {
@@ -27,7 +58,20 @@ export default function Layout({ children }) {
 
   const handleLogout = () => { logout(); navigate("/login"); };
 
-  const filteredNav = navItems.filter((item) => auth.hasRole(...item.roles));
+  const filteredSections = navSections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => auth.hasRole(...item.roles)),
+    }))
+    .filter((section) => section.items.length > 0);
+
+  const isActive = (path) => {
+    const [p, query] = path.split("?");
+    if (query) {
+      return location.pathname === p && location.search.includes(query);
+    }
+    return location.pathname === p;
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -53,18 +97,25 @@ export default function Layout({ children }) {
 
       <div className="flex flex-1">
         <aside className={`${menuOpen ? "block" : "hidden"} lg:block bg-primary-700 text-white w-64 flex-shrink-0 no-print`}>
-          <nav className="p-4 space-y-1">
-            {filteredNav.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setMenuOpen(false)}
-                className={`block px-4 py-2.5 rounded-lg transition text-sm ${
-                  location.pathname === item.path ? "bg-primary-400 text-white" : "hover:bg-primary-600"
-                }`}
-              >
-                {item.label}
-              </Link>
+          <nav className="p-4 space-y-4">
+            {filteredSections.map((section) => (
+              <div key={section.title}>
+                <p className="px-4 pb-1 text-xs font-bold text-primary-300 uppercase tracking-wide">{section.title}</p>
+                <div className="space-y-0.5">
+                  {section.items.map((item) => (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => setMenuOpen(false)}
+                      className={`block px-4 py-2 rounded-lg transition text-sm ${
+                        isActive(item.path) ? "bg-primary-400 text-white" : "hover:bg-primary-600"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             ))}
           </nav>
         </aside>

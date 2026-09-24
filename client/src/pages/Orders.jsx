@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
 import api from "../api/axios";
 import useAuth from "../hooks/useAuth";
 import useSocket from "../hooks/useSocket";
 
 const statusLabels = {
-  pending: "قيد الانتظار", assigned: "قيد التجهيز", picked: "تم التجميع",
+  pending: "غير مجهز", assigned: "قيد التجهيز", picked: "جاهز للشحن",
   completed: "مكتمل", cancelled: "ملغي",
 };
 const statusColors = {
@@ -15,10 +16,19 @@ const statusColors = {
 export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
-  const [tab, setTab] = useState("incomplete");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const statusFilter = searchParams.get("status") || "all";
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [search, setSearch] = useState("");
   const auth = useAuth();
+
+  const tabs = [
+    { key: "all", label: "كل الطلبات" },
+    { key: "pending", label: "غير مجهز" },
+    { key: "assigned", label: "قيد التجهيز" },
+    { key: "picked", label: "جاهز للشحن" },
+    { key: "completed", label: "مكتمل" },
+  ];
 
   const fetchData = useCallback(async () => {
     try {
@@ -60,8 +70,7 @@ export default function Orders() {
   };
 
   const filteredOrders = orders.filter((o) => {
-    if (tab === "completed" && o.status !== "completed") return false;
-    if (tab === "incomplete" && (o.status === "completed" || o.status === "cancelled")) return false;
+    if (statusFilter !== "all" && o.status !== statusFilter) return false;
     if (search && !o.id.toString().includes(search)) return false;
     return true;
   });
@@ -81,20 +90,19 @@ export default function Orders() {
   return (
     <div className="space-y-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-        <h1 className="text-2xl font-bold text-gray-800">إدارة الطلبات</h1>
+        <h1 className="text-2xl font-bold text-gray-800">فواتير البيع</h1>
         <div className="relative">
           <input type="text" placeholder="🔍 ابحث برقم الوصل..." value={search} onChange={(e) => setSearch(e.target.value)} className="input-field pr-8 w-full md:w-64" />
           {search && <button onClick={() => setSearch("")} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg">&times;</button>}
         </div>
       </div>
 
-      <div className="flex gap-2 bg-gray-100 p-1 rounded-lg w-fit">
-        <button onClick={() => setTab("incomplete")} className={`px-4 py-2 rounded-md text-sm font-medium transition ${tab === "incomplete" ? "bg-white text-primary-500 shadow-sm" : "text-gray-600 hover:text-gray-800"}`}>
-          الطلبات غير المكتملة
-        </button>
-        <button onClick={() => setTab("completed")} className={`px-4 py-2 rounded-md text-sm font-medium transition ${tab === "completed" ? "bg-white text-primary-500 shadow-sm" : "text-gray-600 hover:text-gray-800"}`}>
-          الطلبات المكتملة
-        </button>
+      <div className="flex gap-2 bg-gray-100 p-1 rounded-lg w-fit flex-wrap">
+        {tabs.map((t) => (
+          <button key={t.key} onClick={() => setSearchParams(t.key === "all" ? {} : { status: t.key })} className={`px-4 py-2 rounded-md text-sm font-medium transition ${statusFilter === t.key ? "bg-white text-primary-500 shadow-sm" : "text-gray-600 hover:text-gray-800"}`}>
+            {t.label}
+          </button>
+        ))}
       </div>
 
       <div className="card space-y-6">

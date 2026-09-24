@@ -72,7 +72,7 @@ export default function Dashboard() {
   };
 
   const statusLabels = {
-    pending: "قيد الانتظار", assigned: "قيد التجهيز", picked: "تم التجميع", completed: "مكتمل", cancelled: "ملغي",
+    pending: "غير مجهز", assigned: "قيد التجهيز", picked: "جاهز للشحن", completed: "مكتمل", cancelled: "ملغي",
   };
   const statusColors = {
     pending: "bg-yellow-100 text-yellow-800", assigned: "bg-blue-100 text-blue-800",

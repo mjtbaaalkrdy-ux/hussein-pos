@@ -12,7 +12,7 @@ router.get("/", authenticate, hideCostPrice, async (req, res) => {
 });
 
 router.get("/all", authenticate, authorize("admin", "assistant"), async (_, res) => {
-  const products = await prisma.product.findMany({ orderBy: { name: "asc" } });
+  const products = await prisma.product.findMany({ where: { active: true }, orderBy: { name: "asc" } });
   res.json(products);
 });
 
@@ -23,9 +23,9 @@ router.get("/:id", authenticate, hideCostPrice, async (req, res) => {
 });
 
 router.post("/", authenticate, authorize("admin", "assistant"), async (req, res) => {
-  const { name, barcode, costPrice, sellPrice, piecesStock, cartonsStock, warehouse, section } = req.body;
+  const { name, barcode, costPrice, sellPrice, piecesStock, cartonsStock, minStock, warehouse, section } = req.body;
   const product = await prisma.product.create({
-    data: { name, barcode: barcode || "", costPrice: costPrice || 0, sellPrice: sellPrice || 0, piecesStock: piecesStock || 0, cartonsStock: cartonsStock || 0, warehouse: warehouse || "رئيسي", section: section || "" },
+    data: { name, barcode: barcode || "", costPrice: costPrice || 0, sellPrice: sellPrice || 0, piecesStock: piecesStock || 0, cartonsStock: cartonsStock || 0, minStock: minStock || 0, warehouse: warehouse || "رئيسي", section: section || "" },
   });
   res.json(product);
 });
